@@ -1,0 +1,8 @@
+.env
+data/
+__pycache__/
+*.pyc
+*.log
+bot.err.log
+.venv/
+venv/
