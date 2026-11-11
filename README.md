@@ -125,6 +125,67 @@ python bot.py
 python bot.py --selftest
 ```
 
+## Установка на Ubuntu (VDS)
+
+Проверено для Ubuntu 22.04/24.04. Боту нужен только исходящий интернет —
+открывать порты на сервере не нужно.
+
+1. Подготовьте сервер:
+
+```bash
+sudo apt update
+sudo apt install -y python3 python3-venv python3-pip git
+sudo useradd -r -m -d /opt/gmodrp-bot -s /bin/bash gmodrp
+```
+
+2. Скачайте бота и установите зависимости:
+
+```bash
+sudo -u gmodrp git clone https://github.com/RGRev1t/GmodRP.git /opt/gmodrp-bot
+cd /opt/gmodrp-bot
+sudo -u gmodrp python3 -m venv .venv
+sudo -u gmodrp .venv/bin/pip install -r requirements.txt
+```
+
+3. Создайте `.env` и заполните токен:
+
+```bash
+sudo -u gmodrp cp .env.example .env
+sudo -u gmodrp nano .env
+sudo chmod 600 .env
+```
+
+Обязательно: `DISCORD_TOKEN`, `GUILD_ID` (ID основного сервера), `OWNER_IDS`.
+В Discord Developer Portal включите `SERVER MEMBERS INTENT` — без него бот
+не увидит участников и роли.
+
+4. Запустите как службу systemd:
+
+```bash
+sudo cp deploy/gmodrp-bot.service /etc/systemd/system/gmodrp-bot.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now gmodrp-bot
+sudo systemctl status gmodrp-bot
+```
+
+5. Смотрите логи:
+
+```bash
+journalctl -u gmodrp-bot -f
+```
+
+6. Обновление после изменений в GitHub:
+
+```bash
+cd /opt/gmodrp-bot
+sudo -u gmodrp git pull
+sudo -u gmodrp .venv/bin/pip install -r requirements.txt
+sudo systemctl restart gmodrp-bot
+```
+
+`.env`, база и логи не перезаписываются при обновлении — они в `.gitignore`.
+База лежит в `/opt/gmodrp-bot/data/audit.db`.
+
 ## Первичная настройка
 
 1. **Поднимите роль бота** выше всех ролей администрации.
@@ -227,6 +288,7 @@ SQLite-файл `data/audit.db` рядом с ботом: настройки, к
 | `updates.py` | версия бота и текст обновления для автопоста |
 | `migrate.py` | перенос данных между серверами |
 | `list_commands.py` | вывод дерева команд без подключения |
+| `deploy/gmodrp-bot.service` | готовый systemd-сервис для Ubuntu VDS |
 
 ## Замечания
 

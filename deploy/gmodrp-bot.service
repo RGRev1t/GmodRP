@@ -1,0 +1,18 @@
+[Unit]
+Description=GmodRP Discord Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=gmodrp
+Group=gmodrp
+WorkingDirectory=/opt/gmodrp-bot
+Environment=PYTHONUNBUFFERED=1
+UMask=0077
+ExecStart=/opt/gmodrp-bot/.venv/bin/python /opt/gmodrp-bot/bot.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
