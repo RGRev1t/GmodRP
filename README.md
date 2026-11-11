@@ -135,7 +135,9 @@ python bot.py --selftest
 ```bash
 sudo apt update
 sudo apt install -y python3 python3-venv python3-pip git
-sudo useradd -r -m -d /opt/gmodrp-bot -s /bin/bash gmodrp
+sudo useradd -r -m -d /home/gmodrp -s /bin/bash gmodrp
+sudo mkdir -p /opt/gmodrp-bot
+sudo chown gmodrp:gmodrp /opt/gmodrp-bot
 ```
 
 2. Скачайте бота и установите зависимости:
@@ -146,6 +148,9 @@ cd /opt/gmodrp-bot
 sudo -u gmodrp python3 -m venv .venv
 sudo -u gmodrp .venv/bin/pip install -r requirements.txt
 ```
+
+Если файлы уже загружены в `/opt/gmodrp-bot` вручную, пропустите `git clone`
+и выполните `sudo chown -R gmodrp:gmodrp /opt/gmodrp-bot`.
 
 3. Создайте `.env` и заполните токен:
 
